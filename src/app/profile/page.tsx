@@ -23,8 +23,8 @@ const ProfileForm = () => {
     };
   
     return (
-        <section className="flex min-h-screen justify-between p-24 m-auto py-10">
-        <div className="w-full p-4 md:w-[35%]">
+        <section className="flex  flex-col min-h-screen justify-between p-2 md:p-24 m-auto py-10 md:flex-row lg:flex-row">
+        <div className="w-full p-4 md:w-[500px] hidden md:block">
  
          <IPhoneComponent/>
         </div>
@@ -37,21 +37,19 @@ const ProfileForm = () => {
         <ImageUploader />
         </div>
             <form onSubmit={handleSubmit} className="w-full">
-            <div className="mb-4 flex gap-4 w-full">
+            <div className="mb-4 flex-col md:flex-rol gap-4 w-full">
                 <label className="block text-gray-700 mb-2">First name</label>
-                <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="e.g. John" className=" flex-1 px-3 py-2 border rounded-lg focus:outline-none " required />
+                <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="e.g. John" className="w-full flex-1 px-3 py-2 border rounded-lg focus:outline-none " required />
             </div>
-            <div className="mb-4  flex gap-4">
+            <div className="mb-4  flex-col md:flex-rol gap-4">
                 <label className="block text-gray-700 mb-2">Last name</label>
                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="e.g. Appleseed" className="w-full px-3 py-2 border rounded-lg focus:outline-none flex-1" required />
             </div>
-            <div className="mb-4 flex gap-4">
+            <div className="mb-4 flex-col md:flex-rol gap-4">
                 <label className="block text-gray-700 mb-2">Email</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. email@example.com" className="w-full px-3 py-2 border rounded-lg focus:outline-none  flex-1" required />
             </div>
-            <button className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-        Save
-      </button>
+            <button className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">Save</button>
             </form>
         </div>
         </div>
