@@ -1,113 +1,196 @@
+"use client";
 import Image from "next/image";
+import { IoMdLink } from "react-icons/io";
+import React, { useState } from 'react';
+import { IoLogoYoutube } from "react-icons/io";
+import { FaXTwitter } from "react-icons/fa6";
+import { CiLinkedin } from "react-icons/ci";
+import { FaYoutube, FaTiktok, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 
-export default function Home() {
+const linkData = [
+  {
+    platform: 'YouTube',
+    icon: FaYoutube,
+    url: 'https://www.youtube.com',
+    color:"bg-[#FF0000]"
+  },
+  {
+    platform: 'TikTok',
+    icon: FaTiktok,
+    url: 'https://www.tiktok.com',
+    color:"bg-[#000000]"
+  },
+  {
+    platform: 'Twitter',
+    icon: FaTwitter,
+    url: 'https://www.twitter.com',
+    color:"bg-[#1DA1F2]"
+  },
+  {
+    platform: 'LinkedIn',
+    icon: FaLinkedin,
+    url: 'https://www.linkedin.com',
+    color:'bg-[#0077b5]'
+  },
+  {
+    platform: 'GitHub',
+    icon: FaGithub,
+    url: 'https://www.github.com',
+    color:'bg-[#000000]'
+  }
+];
+const Home = () => {
+  const [showNext, setShowNext] = useState(false);
+  const [preview, setPreviewModel] = useState(false);
+  const [links, setLinks] = useState<Link[]>([{ platform: '', url: '' }]);
+
+  const addNewLink = () => {
+    setLinks([...links, { platform: '', url: '' }]);
+  };
+
+  const handleLinkChange = (index: number, event: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    const updatedLinks = [...links];
+    updatedLinks[index][name] = value;
+    setLinks(updatedLinks);
+  };
+
+  const removeLink = (index: number) => {
+    const updatedLinks = [...links];
+    updatedLinks.splice(index, 1);
+    setLinks(updatedLinks);
+  };
+  const setToNext=()=>{
+    setShowNext(!showNext)
+  }
+
+  const showPreview=()=>{
+    setPreviewModel(!showNext)
+  }
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    <section className="flex min-h-screen justify-between p-24 m-auto py-10">
+       <div className="w-full p-4 md:w-[35%]">
+
+        <IPhoneComponent links={links}/>
+       </div>
+      <div className="w-full p-4 md:w-[60%]">
+        
+          <CustomizeLinks onSave={setToNext} addNewLink={addNewLink} links={links} removeLink={removeLink} handleLinkChange={handleLinkChange}/>
+        
+      </div>
+    </section>
+  )
+}
+
+interface Link {
+  platform: string;
+  url: string;
+  [key: string]: any; // Add this line
+}
+
+
+type OnSave = () => void; // Define the type of the onSave function
+
+const CustomizeLinks = ({ onSave, addNewLink, links, removeLink, handleLinkChange }: { onSave: OnSave, addNewLink: () => void, links: Link[], removeLink: (index: number) => void, handleLinkChange: (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void }) => {
+ 
+  return (
+    <div className="flex flex-col p-8 bg-white rounded-lg shadow-md   mx-auto w-full">
+      <h2 className="text-2xl font-bold text-gray-800 mb-2">Customize your links</h2>
+      <p className="text-gray-600 mb-6">Add/edit/remove links below and then share all your profiles with the world!</p>
+      <button
+        className="mb-6 px-6 py-2 border-2 border-purple-500 text-purple-500 rounded-lg hover:bg-purple-200 hover:text-purple-700"
+        onClick={addNewLink}
+      >
+        + Add new link
+      </button>
+      
+      {links.map((link, index) => (
+        <div key={index} className="w-full bg-gray-100 p-4 mb-4 rounded-lg flex flex-col">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-gray-800 font-bold flex gap-3"><IoMdLink size={24} /> Link #{index + 1}</h3>
+            <button
+              className="text-red-500 hover:underline"
+              onClick={() => removeLink(index)}
+            >
+              Remove
+            </button>
+          </div>
+          <div className="flex flex-col mb-2">
+            <label className="text-gray-600 mb-1">Platform</label>
+            <select
+              name="platform"
+              value={link.platform}
+              onChange={(event) => handleLinkChange(index, event)}
+              className="p-2 border rounded-lg text-gray-600"
+            >
+              <option value="">Select Platform</option>
+              <option value="GitHub"><span><FaGithub size={24} /></span>GitHub</option>
+              <option value="YouTube"><span><IoLogoYoutube size={24} /></span>Youtube</option>
+              <option value="Twitter"><span><FaXTwitter size={24} /></span>Twitter</option>
+              <option value="LinkedIn"><span><CiLinkedin size={24} /></span>LinkedIn</option>
+              {/* Add more options as needed */}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label className="text-gray-600 mb-1">Link</label>
+            <input
+              type="url"
+              name="url"
+              value={link.url}
+              onChange={(event) => handleLinkChange(index, event)}
+              className="p-2 border rounded-lg"
+              placeholder="https://example.com"
             />
-          </a>
+          </div>
+        </div>
+      ))}
+      
+      <button className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600" onClick={onSave}>
+        Save
+      </button>
+    </div>
+  );
+};
+
+const getIconComponent = (platform) => {
+  const link = linkData.find(link => link.platform === platform);
+  return link ? link.icon : null;
+};
+const getIconColor = (platform) => {
+  const link = linkData.find(link => link.platform === platform);
+  return link ? link.color : null;
+};
+
+export const IPhoneComponent = ({ links }) => {
+  return (
+    <div className="flex flex-col w-[100%] h-full bg-white rounded-md justify-center items-center">
+      <div className="relative w-76 md:w-[50%] h-128 border-2 border-gray-300 rounded-3xl p-4 bg-white h-[70%]">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-4 bg-gray-200 rounded-b-lg"></div>
+        <div className="flex flex-col items-center mt-8 space-y-4">
+          <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+          <div className="w-3/4 h-2 bg-gray-200 rounded"></div>
+          <div className="w-1/2 h-2 bg-gray-200 rounded"></div>
+         
+          {links && links.map((link, index) => {
+            const IconComponent = getIconComponent(link.platform);
+            const color = getIconColor(link.platform);
+
+            return (
+              <div key={index} className={`w-full p-4 mb-4 rounded-lg flex flex-col ${color}`}>
+                <div className="flex items-center">
+                  {IconComponent && <IconComponent className="mr-2" size={24} />}
+                  <span>{link.platform}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
-}
+};
+
+
+export default Home
