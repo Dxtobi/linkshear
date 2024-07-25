@@ -2,12 +2,22 @@
 
 import React, { useState } from 'react';
 import ImageUploader from '@/components/UploadZone';
-import { IPhoneComponent } from '../page';
+import  IPhoneComponent from '@/components/Iphonecomponent';
 
 
+interface ProfileImage {
+    url: string;
+  }
+  interface Link {
+    title: string;
+    url: string;
+  }
+  
+  
 
 const ProfileForm = () => {
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState<ProfileImage | null>(null);
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -21,12 +31,16 @@ const ProfileForm = () => {
       e.preventDefault();
       // Handle form submission
     };
+    const links: Link[] = [
+    { title: 'Link 1', url: 'https://example.com/link1' },
+    { title: 'Link 2', url: 'https://example.com/link2' },
+    // Add more links as needed
+  ];
   
     return (
         <section className="flex  flex-col min-h-screen justify-between p-2 md:p-24 m-auto py-10 md:flex-row lg:flex-row">
         <div className="w-full p-4 md:w-[500px] hidden md:block">
- 
-         <IPhoneComponent/>
+         <IPhoneComponent links={[]}/>
         </div>
        <div className="w-full p-4 md:w-[60%]">
          

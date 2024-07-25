@@ -3,21 +3,21 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 const ImageUploader = () => {
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles: any[]) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      setUploadedImage(e.target.result);
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && typeof e.target.result === 'string') {
+        setUploadedImage(e.target.result);
+      }
     };
 
     reader.readAsDataURL(file);
   }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: ['image/*'] });
-
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <div className="flex flex-col rounded-lg  mx-auto w-full ">
       <div

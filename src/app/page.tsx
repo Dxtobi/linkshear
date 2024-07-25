@@ -1,46 +1,17 @@
 "use client";
 import Image from "next/image";
 import { IoMdLink } from "react-icons/io";
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { IoLogoYoutube } from "react-icons/io";
 import { FaXTwitter } from "react-icons/fa6";
 import { CiLinkedin } from "react-icons/ci";
 import { FaYoutube, FaTiktok, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 
-const linkData = [
-  {
-    platform: 'YouTube',
-    icon: FaYoutube,
-    url: 'https://www.youtube.com',
-    color:"bg-[#FF0000]"
-  },
-  {
-    platform: 'TikTok',
-    icon: FaTiktok,
-    url: 'https://www.tiktok.com',
-    color:"bg-[#000000]"
-  },
-  {
-    platform: 'Twitter',
-    icon: FaTwitter,
-    url: 'https://www.twitter.com',
-    color:"bg-[#1DA1F2]"
-  },
-  {
-    platform: 'LinkedIn',
-    icon: FaLinkedin,
-    url: 'https://www.linkedin.com',
-    color:'bg-[#0077b5]'
-  },
-  {
-    platform: 'GitHub',
-    icon: FaGithub,
-    url: 'https://www.github.com',
-    color:'bg-[#000000]'
-  }
-];
-const validateLink = (platform, url) => {
-  const domainMap = {
+import  IPhoneComponent from '@/components/Iphonecomponent';
+
+
+const validateLink = (platform: string, url: string | any[]) => {
+  const domainMap: { [key: string]: string } = {
     'YouTube': 'youtube.com',
     'TikTok': 'tiktok.com',
     'Twitter': 'twitter.com',
@@ -61,7 +32,10 @@ const Home = () => {
     setLinks([...links, { platform: '', url: '' }]);
   };
 
-  const handleLinkChange = (index: number, event: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+  const handleLinkChange = (
+    index: number,
+    event: ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
     const { name, value } = event.target;
     const updatedLinks = [...links];
     updatedLinks[index][name] = value;
@@ -111,12 +85,13 @@ const Home = () => {
 interface Link {
   platform: string;
   url: string;
-  [key: string]: any; // Add this line
+  isValid?: boolean;
+  [key: string]: any; 
 }
 
 
-const CustomizeLinks = ({ onSave, addNewLink, links, removeLink, handleLinkChange }: { onSave: OnSave, addNewLink: () => void, links: Link[], removeLink: (index: number) => void, handleLinkChange: (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void }) => {
- 
+const CustomizeLinks = ({ onSave, addNewLink, links, removeLink, handleLinkChange }: { onSave: any, addNewLink: () => void, links: Link[], removeLink: (index: number) => void, handleLinkChange: (index: number, event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void }) => {
+  
   return (
     <div className="flex flex-col p-8 bg-white rounded-lg shadow-md   mx-auto w-full">
       <h2 className="text-2xl font-bold text-gray-800 mb-2">Customize your links</h2>
@@ -144,8 +119,8 @@ const CustomizeLinks = ({ onSave, addNewLink, links, removeLink, handleLinkChang
             <select
               name="platform"
               value={link.platform}
-              onChange={(event) => handleLinkChange(index, event)}
-              onSelect={(event) => handleLinkChange(index, event)}
+              onChange={(event: ChangeEvent<HTMLSelectElement>) => handleLinkChange(index, event)}
+              onSelect={(event: ChangeEvent<HTMLSelectElement>) => handleLinkChange(index, event)}
               className="p-2 border rounded-lg text-gray-600"
             >
               <option value="">Select Platform</option>
@@ -178,44 +153,12 @@ const CustomizeLinks = ({ onSave, addNewLink, links, removeLink, handleLinkChang
   );
 };
 
+interface IPhoneComponentProps {
+  links: Link[];
+}
 
-export const IPhoneComponent = ({ links }) => {
-  return (
-    <div className="flex flex-col w-[100%] h-full bg-white rounded-md justify-center items-center">
-      <div className="relative w-76 md:w-[60%] lg:w-[80%] h-128 border-2 border-gray-300 rounded-3xl p-4 bg-white h-[70%]">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-4 bg-gray-200 rounded-b-lg"></div>
-        <div className="flex flex-col items-center mt-8 space-y-4">
-          <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-          <div className="w-3/4 h-2 bg-gray-200 rounded"></div>
-          <div className="w-1/2 h-2 bg-gray-200 rounded"></div>
-         
-          {links && links.map((link: { platform: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => {
-            const IconComponent = getIconComponent(link.platform);
-            const color = getIconColor(link.platform);
 
-            return (
-              <div key={index} className={`w-full p-4 mb-4 rounded-lg flex flex-col ${color}`}>
-                <div className="flex items-center">
-                  {IconComponent && <IconComponent className="mr-2" size={24} />}
-                  <span>{link.platform}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
 
-type OnSave = () => void; 
-const getIconComponent = (platform: string) => {
-  const link = linkData.find(link => link.platform === platform);
-  return link ? link.icon : null;
-};
-const getIconColor = (platform: string) => {
-  const link = linkData.find(link => link.platform === platform);
-  return link ? link.color : null;
-};
+
 
 export default Home
